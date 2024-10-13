@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">  <!-- Язык документа -->
+<head>
+    <meta charset="UTF-8">
+    <title>Прогнозирование размеров сварного шва</title>
+    <style>
+        form {
+            margin: auto;
+            width: 35%;
+        }
+
+        .result {
+            margin: auto;
+            width: 35%;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Прогнозирование размеров сварного шва при электронно-лучевой сварке
+тонкостенных конструкций аэрокосмического назначения</h1>
+    
+    <form action="{{ url_for('main') }}" method="POST">  <!-- Корректный URL для обработки формы -->
+        <p>
+            <label for="IW">Величина сварочного тока (IW)</label>
+            <input type="number" name="IW" required>  <!-- Обязательное поле -->
+        </p>
+        <p>
+            <label for="IF">Ток сварки (IF)</label>
+            <input type="number" name="IF" required>  <!-- Обязательное поле -->
+        </p>
+        <p>
+            <label for="VW">Скорость сварки (VW)</label>
+            <input type="number" name="VW" required>  <!-- Обязательное поле -->
+        </p>
+        <p>
+            <label for="FP">Расстояние от образцов до поверхности (FP)</label>
+            <input type="number" name="FP" required>  <!-- Обязательное поле -->
+        </p>
+        <p>
+            <input type="submit" value="Предсказать">  <!-- Текст кнопки -->
+        </p>
+    </form>
+    
+    {% if result is not none %}  <!-- Проверка, есть ли результат -->
+    <div class="result" id="result">  <!-- Блок для отображения результата -->
+        <h2>Результат предсказания:</h2>
+        <p>{{ result }}</p>  <!-- Отображение результата -->
+    </div>
+    {% endif %}
+</body>
+</html>
