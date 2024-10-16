@@ -20,13 +20,28 @@ def main():
             VW = float(flask.request.form['VW'])   # Получаем значение VW
             FP = float(flask.request.form['FP'])   # Получаем значение FP
 
-            with open('lr_model.pkl', 'rb') as f:
-                loaded_model = pickle.load(f)
+            # Загружаем модель для предсказания ширины шва (линейная регрессия)
+            with open('lr_width_model.pkl', 'rb') as f:
+                lr_model = pickle.load(f)
 
-            # Используем все четыре переменные для предсказания
-            y_pred = loaded_model.predict([[IW, IF, VW, FP]])  # Предсказание на основе всех четырех параметров
+            # Загружаем модель для предсказания глубины шва (случайный лес)
+            with open('rf_depth_model.pkl', 'rb') as f:
+                rf_model = pickle.load(f)
 
-            return render_template('main.html', result=y_pred[0])  # Передаем результат в шаблон
+            # Формируем данные для предсказания
+            input_data = [[IW, IF, VW, FP]]
+
+            # Предсказание ширины шва с помощью линейной регрессии
+            predicted_width = lr_model.predict(input_data)
+
+            # Предсказание глубины шва с помощью случайного леса
+            predicted_depth = rf_model.predict(input_data)
+
+            # Возвращаем результаты предсказаний в шаблон
+            return render_template('main.html', 
+                                   predicted_width=predicted_width[0], 
+                                   predicted_depth=predicted_depth[0])
+        
         except KeyError as e:
             return render_template('main.html', error=f"Отсутствует поле: {str(e)}")
         except ValueError as e:
